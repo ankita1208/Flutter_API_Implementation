@@ -1,3 +1,5 @@
+import 'package:api_implementation/Utilities/NavigatorUtil.dart';
+import 'package:api_implementation/screens/AddEdit.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -18,7 +20,7 @@ class Home extends StatelessWidget {
               title: Text('Rating',style: TextStyle(color: Colors.white,),),
               subtitle: Text('Movie Name',style: TextStyle(color: Colors.white,)),
               onTap: () {
-                // Add your onTap logic here if needed
+               NavigationUtil.navigateTo(context, AddEdit());
               },
             ),
           );

@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:api_implementation/model/BooksModel.dart';
 import 'package:api_implementation/widgets/button.dart';
 import 'package:api_implementation/widgets/flatButton.dart';
 import 'package:api_implementation/widgets/textfieldwidget.dart';
 import 'package:flutter/material.dart';
+
+import '../Utilities/SharedPrefUtils.dart';
+import '../apiService/api_service.dart';
 
 class AddEdit extends StatefulWidget {
   const AddEdit({super.key, required this.isEdit});
@@ -15,20 +21,36 @@ class AddEdit extends StatefulWidget {
 }
 
 class _AddEditState extends State<AddEdit> {
-  final TextEditingController _idTextEditingController =
-      TextEditingController();
-  final TextEditingController _bookTextEditingController =
-      TextEditingController();
-  final TextEditingController _authorTextEditingController =
-      TextEditingController();
-  final TextEditingController _ratingTextEditingController =
-      TextEditingController();
+  late TextEditingController _idTextEditingController;
+
+  late TextEditingController _bookTextEditingController;
+
+  late TextEditingController _authorTextEditingController;
+
+  late TextEditingController _ratingTextEditingController;
+
   late bool _isEdit;
+
 
   @override
   void initState() {
     _isEdit = widget.isEdit;
+
   }
+
+
+  //
+  // void setTextInFields() {
+  //   for (int i = 0; i < books.length; i++) {
+  //     // Access each book using books[i]
+  //     BookModel book = books[i];
+  //     _idTextEditingController.text = book.getId!;
+  //     _bookTextEditingController.text = book.getBooksName!;
+  //     _authorTextEditingController.text = book.getAuthor!;
+  //     _ratingTextEditingController.text = book.getRating! as String;
+  //
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

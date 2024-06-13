@@ -8,19 +8,51 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              NavigationUtil.navigateTo(
+                context,
+                const AddEdit(isEdit: false),
+              );
+            },
+            icon: const Icon(
+              Icons.add_box_rounded,
+              color: Color.fromRGBO(233, 99, 108, 25),
+            ),
+          ),
+        ],
+      ),
       body: ListView.builder(
         itemCount: 2,
         itemBuilder: (context, index) {
           return Card(
-            color: Color.fromRGBO(233, 99, 108, 25),
-            margin: EdgeInsets.all(10), // Adds margin around the card
+            color: const Color.fromRGBO(233, 99, 108, 25),
+            margin: const EdgeInsets.all(10), // Adds margin around the card
             elevation: 4, // Elevation for the shadow effect
             child: ListTile(
-              leading: Icon(Icons.star,color: Colors.yellow,),
-              title: Text('Rating',style: TextStyle(color: Colors.white,),),
-              subtitle: Text('Movie Name',style: TextStyle(color: Colors.white,)),
+              leading: const Icon(
+                Icons.star,
+                color: Colors.yellow,
+              ),
+              title: const Text(
+                'Rating',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              subtitle: const Text('Movie Name',
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
               onTap: () {
-               NavigationUtil.navigateTo(context, AddEdit());
+                NavigationUtil.navigateTo(
+                  context,
+                  const AddEdit(
+                    isEdit: true,
+                  ),
+                );
               },
             ),
           );

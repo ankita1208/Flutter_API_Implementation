@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:api_implementation/screens/Home.dart';
 import 'package:api_implementation/widgets/button.dart';
 import 'package:api_implementation/widgets/flatButton.dart';
@@ -5,8 +7,10 @@ import 'package:api_implementation/widgets/textfieldwidget.dart';
 import 'package:flutter/material.dart';
 
 import '../Utilities/NavigatorUtil.dart';
+import '../Utilities/SharedPrefUtils.dart';
 import '../Utilities/SnackbarUtil.dart';
 import '../apiService/api_service.dart';
+import '../model/LoginResponse.dart';
 import 'Signup.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -35,6 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final response = await apiService.login(username, password);
       if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        String token = responseData['token'];
+        await SharedPrefUtil.setStringInPref('token', token);
+
         SnackbarUtil.showSnackBar(context, "Login successful!");
         NavigationUtil.navigateToAndReplace(context, Home());
       } else {

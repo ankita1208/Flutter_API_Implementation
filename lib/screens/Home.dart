@@ -2,8 +2,22 @@ import 'package:api_implementation/Utilities/NavigatorUtil.dart';
 import 'package:api_implementation/screens/AddEdit.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeState();
+  }
+
+}
+
+
+  class _HomeState extends State<Home> {
+
+  void _getAllBooks () {
+
+  }
 
   @override
   Widget build(BuildContext context) {

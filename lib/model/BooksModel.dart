@@ -1,12 +1,13 @@
 import 'dart:io';
 
-class BookModel  {
+class BookModel {
   String? title;
   String? id;
   String? author;
   String? ISBN;
   String? booksName;
   double? rating;
+
   BookModel({
     this.title,
     this.id,
@@ -56,14 +57,24 @@ class BookModel  {
   factory BookModel.fromJson(Map<String, dynamic> json) {
     return BookModel(
       title: json['title'],
-      id: json['id'],
+      id: json['_id'],
       author: json['author'],
       ISBN: json['ISBN'],
       booksName: json['booksName'],
       rating: json['rating'] != null ? json['rating'].toDouble() : null,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'title': title,
+      'booksName': booksName,
+      'rating': rating,
+    };
+  }
+
+
+
+
 }
-
-
-

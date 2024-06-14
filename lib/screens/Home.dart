@@ -101,8 +101,9 @@ class _HomeState extends State<Home> {
               onTap: () {
                 NavigationUtil.navigateTo(
                   context,
-                  const AddEdit(
+                  AddEdit(
                     isEdit: true,
+                    bookModel: books[index],
                   ),
                 );
               },

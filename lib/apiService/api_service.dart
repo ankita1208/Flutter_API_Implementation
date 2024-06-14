@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:api_implementation/model/BooksModel.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -32,6 +33,20 @@ class ApiService {
         'username': username,
         'password': password,
       }),
+    );
+    return response;
+  }
+
+
+  Future<http.Response> editBook (String id, String accessToken, BookModel bookModel) async {
+    final url = Uri.parse('$baseUrl/api/books/$id');
+    final response = await http.put(
+      url,
+      headers: {
+        'Authorization' : 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(bookModel.toJson()),
     );
     return response;
   }

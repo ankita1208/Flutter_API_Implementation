@@ -1,18 +1,23 @@
 import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:api_implementation/apiService/api_service.dart';
 import 'package:api_implementation/model/BooksModel.dart';
 import 'package:api_implementation/widgets/button.dart';
-import 'package:api_implementation/widgets/flatButton.dart';
+
 import 'package:api_implementation/widgets/textfieldwidget.dart';
 import 'package:flutter/material.dart';
 
 import '../Utilities/SharedPrefUtils.dart';
-import '../apiService/api_service.dart';
+import '../Utilities/SnackbarUtil.dart';
 
 class AddEdit extends StatefulWidget {
-  const AddEdit({super.key, required this.isEdit});
+  const AddEdit({super.key, required this.isEdit, this.bookModel});
 
   final bool isEdit;
+
+  // to make the bookmodel not a required parameter
+  final BookModel? bookModel;
 
   @override
   State<StatefulWidget> createState() {
@@ -21,36 +26,70 @@ class AddEdit extends StatefulWidget {
 }
 
 class _AddEditState extends State<AddEdit> {
-  late TextEditingController _idTextEditingController;
+  late final TextEditingController _idTextEditingController =
+      TextEditingController();
 
-  late TextEditingController _bookTextEditingController;
+  late final TextEditingController _bookTextEditingController =
+      TextEditingController();
 
-  late TextEditingController _authorTextEditingController;
+  late final TextEditingController _authorTextEditingController =
+      TextEditingController();
 
-  late TextEditingController _ratingTextEditingController;
+  late final TextEditingController _ratingTextEditingController =
+      TextEditingController();
 
   late bool _isEdit;
 
+  late BookModel _bookModel;
+
+  late ApiService apiService = ApiService();
+  String? token;
 
   @override
   void initState() {
     _isEdit = widget.isEdit;
-
+    _bookModel = widget.bookModel!;
+    getTokenFromSharedPref();
+    setState(() {
+      setTextInFields();
+    });
   }
 
+  void getTokenFromSharedPref() async {
+    token = await SharedPrefUtil.getStringFromPref('token');
+  }
 
-  //
-  // void setTextInFields() {
-  //   for (int i = 0; i < books.length; i++) {
-  //     // Access each book using books[i]
-  //     BookModel book = books[i];
-  //     _idTextEditingController.text = book.getId!;
-  //     _bookTextEditingController.text = book.getBooksName!;
-  //     _authorTextEditingController.text = book.getAuthor!;
-  //     _ratingTextEditingController.text = book.getRating! as String;
-  //
-  //   }
-  // }
+  void _hitEditBookApi() async {
+    handleValidation();
+
+    try {
+      BookModel bookModel = BookModel(
+          title: "",
+          author: _authorTextEditingController.text,
+          id: _idTextEditingController.text,
+          rating: double.tryParse(_ratingTextEditingController.text),
+          booksName: _bookTextEditingController.text,ISBN: _bookModel.getIsbn!);
+      final response =
+          await apiService.editBook(_bookModel.getId!, token!, bookModel);
+      if (response.statusCode == 200) {
+        SnackbarUtil.showSnackBar(context, 'Book updated successfully!');
+        Navigator.of(context).pop();
+      } else {
+        print('Failed to edit book: ${response.statusCode}');
+        SnackbarUtil.showSnackBar(context, 'Failed to edit book');
+      }
+    } catch (e) {
+      print('Error fetching books: $e');
+      SnackbarUtil.showSnackBar(context, 'Failed to edit book $e');
+    }
+  }
+
+  void setTextInFields() {
+    _idTextEditingController.text = _bookModel.getId!;
+    _bookTextEditingController.text = _bookModel.getBooksName!;
+    _authorTextEditingController.text = _bookModel.getAuthor!;
+    _ratingTextEditingController.text = _bookModel.getRating!.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,11 +154,22 @@ class _AddEditState extends State<AddEdit> {
             ),
             ButtonWidget(
               text: _isEdit ? "Update" : "Add",
-              onPressedButton: () {},
+              onPressedButton: () {
+                _isEdit ? _hitEditBookApi() : print("yet to implement");
+              },
             )
           ],
         ),
       ),
     );
+  }
+
+  void handleValidation() {
+    if (_bookTextEditingController.text.isEmpty ||
+        _authorTextEditingController.text.isEmpty ||
+        _ratingTextEditingController.text.isEmpty) {
+      SnackbarUtil.showSnackBar(context, "Please fill in all fields");
+      return;
+    }
   }
 }

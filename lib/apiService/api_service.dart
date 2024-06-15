@@ -51,6 +51,19 @@ class ApiService {
     return response;
   }
 
+  Future<http.Response> addBook (String accessToken, BookModel bookModel) async {
+    final url = Uri.parse('$baseUrl/api/books');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization' : 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(bookModel.toJson()),
+    );
+    return response;
+  }
+
   Future<http.Response> getAllBooks (String accessToken) async {
     final url = Uri.parse('$baseUrl/api/books');
     final response = await http.get(
